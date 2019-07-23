@@ -23,6 +23,7 @@ export const Params = {
     KEY_IS_GEOFENCE_ENABLED: 'IsGeofenceEnabled',
     KEY_HAS_LONGITUDINAL_CONTROL: 'LongitudinalControl',
     KEY_LIMIT_SET_SPEED: 'LimitSetSpeed',
+    KEY_LIMIT_SET_SPEED_NEURAL: 'LimitSetSpeedNeural',
     KEY_SPEED_LIMIT_OFFSET: 'SpeedLimitOffset',
     KEY_LIVE_PARAMETERS: 'LiveParameters',
     KEY_GITHUB_SSH_KEYS: 'GithubSshKeys',

@@ -247,6 +247,7 @@ class Settings extends Component {
                 IsMetric: isMetric,
                 LongitudinalControl: hasLongitudinalControl,
                 LimitSetSpeed: limitSetSpeed,
+                LimitSetSpeedNeural: limitSetSpeedNeural,
                 SpeedLimitOffset: speedLimitOffset,
             }
         } = this.props;
@@ -304,6 +305,18 @@ class Settings extends Component {
                             isExpanded={ expandedCell == 'metric' }
                             handleExpanded={ () => this.handleExpanded('metric') }
                             handleChanged={ this.props.setMetric } />
+                      </X.Table>
+                      <X.Table color='darkBlue'>
+                        <X.TableCell
+                            type='switch'
+                            title='Use Smart Slowdown'
+                            value={ !!parseInt(limitSetSpeedNeural) }
+                            isDisabled={ !parseInt(hasLongitudinalControl) }
+                            iconSource={ Icons.mapSpeed }
+                            description='Determines maximum reasonable driving speed based on road conditions and slows down accordingly. This speed is based on machine learning and is not guaranteed to be below legal limits.'
+                            isExpanded={ expandedCell == 'limitSetSpeedNeural' }
+                            handleExpanded={ () => this.handleExpanded('limitSetSpeedNeural') }
+                            handleChanged={ this.props.setLimitSetSpeedNeural } />
                       </X.Table>
                       {/*
                       <X.Table color='darkBlue'>
@@ -815,6 +828,9 @@ const mapDispatchToProps = dispatch => ({
     },
     setLimitSetSpeed: (limitSetSpeed) => {
         dispatch(updateParam(Params.KEY_LIMIT_SET_SPEED, (limitSetSpeed | 0).toString()));
+    },
+    setLimitSetSpeedNeural: (limitSetSpeedNeural) => {
+        dispatch(updateParam(Params.KEY_LIMIT_SET_SPEED_NEURAL, (limitSetSpeedNeural | 0).toString()));
     },
     setSpeedLimitOffset: (speedLimitOffset) => {
         dispatch(updateParam(Params.KEY_SPEED_LIMIT_OFFSET, (speedLimitOffset).toString()));

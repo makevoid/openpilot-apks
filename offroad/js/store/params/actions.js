@@ -21,6 +21,7 @@ const PARAMS = [
   "IsMetric",
   "IsUploadVideoOverCellularEnabled",
   "LimitSetSpeed",
+  "LimitSetSpeedNeural",
   "LiveParameters",
   "LongitudinalControl",
   "Passive",
