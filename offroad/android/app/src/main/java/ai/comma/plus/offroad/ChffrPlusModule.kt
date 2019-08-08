@@ -20,7 +20,14 @@ import android.net.ConnectivityManager
 import android.net.wifi.WifiInfo
 import android.os.Environment
 import android.os.StatFs
+import android.util.Base64
 import android.util.Log
+import io.jsonwebtoken.Jwts
+import java.io.File
+import java.security.KeyFactory
+import java.security.spec.InvalidKeySpecException
+import java.security.spec.PKCS8EncodedKeySpec
+import java.util.regex.Pattern
 
 
 /**
@@ -269,6 +276,28 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
         val availableBlocks = stat.availableBlocksLong
 
         promise.resolve((availableBlocks * blockSize).toString())
+    }
+
+    @ReactMethod
+    fun createPairToken(promise: Promise) {
+        val keyText = File("/persist/comma/id_rsa").readText()
+        // strip header, footer, and whitespace
+        var keyHex = keyText.replace("-----BEGIN RSA PRIVATE KEY-----", "")
+                .replace("-----END RSA PRIVATE KEY-----", "")
+        keyHex = Pattern.compile("\\s+").matcher(keyHex).replaceAll("")
+        val keyBytes = Base64.decode(keyHex, Base64.DEFAULT)
+        val keySpec = PKCS8EncodedKeySpec(keyBytes)
+
+        val expTime = 3600 + (System.currentTimeMillis() / 1000).toInt()
+        try {
+            val keyFactor = KeyFactory.getInstance("RSA")
+            val key = keyFactor.generatePrivate(keySpec)
+            val token = Jwts.builder().claim("pair", true).claim("exp", expTime).signWith(key).compact()
+            promise.resolve(token)
+        } catch (e: InvalidKeySpecException) {
+            CloudLog.exception("createPairToken: Invalid private key", e)
+            promise.reject(e)
+        }
     }
 
     fun getWifiStateMap(wifiInfo: WifiInfo? = null, networkInfo: NetworkInfo? = null): ReadableNativeMap {

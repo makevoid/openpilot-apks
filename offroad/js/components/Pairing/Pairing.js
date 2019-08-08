@@ -19,7 +19,17 @@ class Pairing extends Component {
     continueText: PropTypes.string,
   };
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      pairToken: null,
+    }
+  }
   componentDidMount() {
+    ChffrPlus.createPairToken().then((pairToken) => {
+      this.setState({ pairToken });
+    });
     this.checkPaired = setInterval(() => {
       this.props.refreshDeviceInfo();
     }, 2500);
@@ -42,11 +52,13 @@ class Pairing extends Component {
     return (
       <View style={ Styles.qrContainer }>
         <View style={ Styles.qrBoarder }>
-          <QRCode
-            value={ this.props.imei + '--' + this.props.serial }
-            size={ 165 }
-            style={{ padding:10 }}
-          />
+          { this.state.pairToken &&
+            <QRCode
+              value={ this.props.imei + '--' + this.props.serial + '--' + this.state.pairToken }
+              size={ 165 }
+              style={{ padding:10 }}
+            />
+          }
         </View>
       </View>
     );
