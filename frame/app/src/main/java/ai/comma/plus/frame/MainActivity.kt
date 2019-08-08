@@ -152,11 +152,12 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
 
     fun startOffroad(isLaunch: Boolean = true): Boolean {
         val privateKey = intent.extras.getString("privateKey")!!
-        val extras = mapOf(Pair("privateKey", privateKey))
+        val extras = Bundle()
+        extras.putString("privateKey", privateKey)
         return startInnerActivity(OFFROAD_APP, isLaunch=isLaunch, extras=extras)
     }
 
-    fun startInnerActivity(name: String, uri: Uri? = null, isLaunch: Boolean = true, extras: Map<String, String>? = null): Boolean {
+    fun startInnerActivity(name: String, uri: Uri? = null, isLaunch: Boolean = true, extras: Bundle? = null): Boolean {
         activityOverlayManager!!.hide()
 
         val intent = Intent(Intent.ACTION_MAIN)
@@ -170,7 +171,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         }
 
         if (extras != null) {
-            extras.entries.forEach { (k,v) -> intent.extras.putString(k, v) }
+            intent.putExtras(extras)
         }
 
         if (activityViewLoaded) {
