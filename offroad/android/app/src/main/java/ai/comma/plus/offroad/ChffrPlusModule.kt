@@ -70,9 +70,6 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
 
         thermalPoller = ThermalPoller(this)
         thermalPoller!!.start()
-
-        val privateKey = ctx.currentActivity?.intent?.extras?.getString("privateKey")
-        Log.d("offroad", "privateKey ${privateKey}")
     }
 
     override fun onCatalystInstanceDestroy() {
