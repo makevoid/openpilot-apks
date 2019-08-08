@@ -70,6 +70,9 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
 
         thermalPoller = ThermalPoller(this)
         thermalPoller!!.start()
+
+        val privateKey = ctx.currentActivity?.intent?.extras?.getString("privateKey")
+        Log.d("offroad", "privateKey ${privateKey}")
     }
 
     override fun onCatalystInstanceDestroy() {
@@ -280,7 +283,8 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
 
     @ReactMethod
     fun createPairToken(promise: Promise) {
-        val keyText = File("/persist/comma/id_rsa").readText()
+        val keyText = ctx.currentActivity?.intent?.extras?.getString("privateKey")!!
+
         // strip header, footer, and whitespace
         var keyHex = keyText.replace("-----BEGIN RSA PRIVATE KEY-----", "")
                 .replace("-----END RSA PRIVATE KEY-----", "")

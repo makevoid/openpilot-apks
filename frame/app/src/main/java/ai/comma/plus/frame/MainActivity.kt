@@ -150,7 +150,13 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
         }
     }
 
-    fun startInnerActivity(name: String, uri: Uri? = null, isLaunch: Boolean = true): Boolean {
+    fun startOffroad(isLaunch: Boolean = true): Boolean {
+        val privateKey = intent.extras.getString("privateKey")!!
+        val extras = mapOf(Pair("privateKey", privateKey))
+        return startInnerActivity(OFFROAD_APP, isLaunch=isLaunch, extras=extras)
+    }
+
+    fun startInnerActivity(name: String, uri: Uri? = null, isLaunch: Boolean = true, extras: Map<String, String>? = null): Boolean {
         activityOverlayManager!!.hide()
 
         val intent = Intent(Intent.ACTION_MAIN)
@@ -161,6 +167,10 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
 
         if (uri != null) {
             intent.setData(uri)
+        }
+
+        if (extras != null) {
+            extras.entries.forEach { (k,v) -> intent.extras.putString(k, v) }
         }
 
         if (activityViewLoaded) {
@@ -250,7 +260,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
                         frame?.background = gradientBlue
                         if (state == STATE.HOME) {
                             broadcastHomePress()
-                            startInnerActivity(OFFROAD_APP)
+                            startOffroad()
                         }
                         activityOverlayManager!!.show(ActivityOverlayManager.OVERLAY_THERMAL_WARNING)
                         hideActivityView()
@@ -396,13 +406,13 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
     } */
 
     fun enterHomeState() {
-        var startApp = OFFROAD_APP
+        var startFn = { startOffroad() }
         if (lastStarted) {
-            startApp = DRIVING_APP
+            startFn = { startInnerActivity(DRIVING_APP) }
             collapseSidebar()
         }
 
-        if (startInnerActivity(startApp)) {
+        if (startFn()) {
             deselectNavItem(settingsButton!!)
             setAndSendState(STATE.HOME)
         }
@@ -504,7 +514,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
 
         openSettingsInOffroad()
 
-        startInnerActivity(OFFROAD_APP, isLaunch = false)
+        startOffroad(isLaunch = false)
         Handler().postDelayed({
             activityView?.visibility = View.VISIBLE
         }, 600)
@@ -619,7 +629,7 @@ class MainActivity : Activity(), NewDestinationReceiverDelegate, OffroadNavigati
             override fun onSurfaceAvailable(view: ActivityView) {
                 synchronized(this@MainActivity) {
                     activityViewLoaded = true
-                    startInnerActivity(OFFROAD_APP)
+                    startOffroad()
                 }
 
                 val isOnUiThread = Looper.myLooper() == Looper.getMainLooper()
