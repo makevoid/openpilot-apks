@@ -51,15 +51,15 @@ class Pairing extends Component {
   renderQR() {
     return (
       <View style={ Styles.qrContainer }>
-        <View style={ Styles.qrBoarder }>
-          { this.state.pairToken &&
-            <QRCode
-              value={ this.props.imei + '--' + this.props.serial + '--' + this.state.pairToken }
-              size={ 165 }
-              style={{ padding:10 }}
-            />
-          }
-        </View>
+        { this.state.pairToken &&
+          <View style={ Styles.qrBoarder }>
+              <QRCode
+                value={ this.props.imei + '--' + this.props.serial + '--' + this.state.pairToken }
+                size={ 165 }
+                style={{ padding:10 }}
+              />
+          </View>
+        }
       </View>
     );
   }
