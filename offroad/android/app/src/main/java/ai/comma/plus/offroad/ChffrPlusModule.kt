@@ -314,7 +314,7 @@ class ChffrPlusModule(val ctx: ReactApplicationContext) :
     }
     @ReactMethod
     fun createPairToken(promise: Promise) {
-        val keyText = File("/persist/comma/id_rsa").readText() 
+        val keyText = File("/persist/comma/id_rsa").readText()
 
         // strip header, footer, and whitespace
         var keyHex = keyText.replace("-----BEGIN RSA PRIVATE KEY-----", "")
