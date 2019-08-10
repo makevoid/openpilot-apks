@@ -162,15 +162,7 @@ class Home extends Component {
                                         style={ Styles.homeActionsSecondaryButton }>
                                         { isPaired ?
                                             <View style={ Styles.homeActionsSecondaryButtonBody }>
-                                                <View style={ Styles.homeActionsSecondaryButtonIcon }>
-                                                    <X.Image
-                                                        source={ require('../../img/icon_road.png') } />
-                                                </View>
-                                                <X.Text
-                                                    color='white'
-                                                    weight='semibold'>
-                                                    EON Paired
-                                                </X.Text>
+                                
                                             </View>
                                             :
                                             <View style={ Styles.homeActionsSecondaryButtonBody }>
